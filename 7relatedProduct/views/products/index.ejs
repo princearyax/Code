@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Products</title>
+</head>
+<body>
+    <h1>All Products: </h1>
+    <form id="categoryForm" action="/produ" method="GET">
+        <select id="category" name="p" onchange="updateFormAction(event)">
+            <option value="all">All</option>
+            <% categories.forEach(element => { %>
+                <option value="<%= element %>"><%= element %></option>
+            <% }) %>
+        </select>
+        <button type="submit">Submit now</button>
+    </form>
+<!-- ohhhhhh it includes only ques mark cuz it submit form and check of name in options -->
+    <ol>
+        <% products.forEach(product => { %>
+            <li>
+                <a href="/products/<%= product._id %>"><%= product.name %></a>
+                <a href="/products/<%= product._id %>/edit"> Edit</a>
+            </li>
+        <% }) %>
+    </ol>
+    <a href="/products/new">Create new product</a>
+
+    <script>
+        function updateFormAction(event) {
+            const selectedCategory = document.getElementById('category').value;
+            const form = document.getElementById('categoryForm');
+
+            // Prevent form from submitting immediately
+            event.preventDefault();
+
+            // Log to check if category value is correct
+            console.log('Selected category: ', selectedCategory);
+
+            // Set the form action based on the selected category
+            if (selectedCategory && selectedCategory !== 'all') {
+                form.action = `/products?category=${selectedCategory}`;
+            } else {
+                form.action = '/products';  // Default action for 'all' or empty
+            }
+
+            // Log to check if the action is correctly set
+            console.log('Form action set to: ', form.action);
+
+            setTimeout(() => {
+                form.submit();
+            }, 20000);
+            
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+<!-- 
+ 
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>All Products</title>
+ </head>
+ <body>
+     <h1>All Products: </h1>
+     <form id="categoryForm" action="/products" method="GET">
+         <select id="category" onchange="updateQueryString(event)">
+             <option value="all">All</option>
+             <% categories.forEach(element => { %>
+                 <option value="<%= element %>"<%= x===element?"selected":"" %>><%= element %></option>
+             <% }) %>
+         </select>
+     </form>
+ 
+     <ol>
+         <% products.forEach(product => { %>
+             <li>
+                 <a href="/products/<%= product._id %>"><%= product.name %></a>
+                 <a href="/products/<%= product._id %>/edit"> Edit</a>
+             </li>
+         <% }) %>
+     </ol>
+     <a href="/products/new">Create new product</a>
+ 
+     <script>
+         function updateQueryString(event) {
+             const selectedCategory = document.getElementById('category').value;
+             let newUrl = '/products';  // Default URL
+ 
+             // Add category to the query string if selected
+             if (selectedCategory && selectedCategory !== 'all') {
+                 newUrl += `?category=${selectedCategory}`;
+             }
+ 
+             // Log the new URL for debugging
+             console.log("New URL: ", newUrl);
+ 
+             // Redirect to the new URL with the query string
+             window.location.href = newUrl;
+         }
+     </script>
+ </body>
+ </html>
+  -->

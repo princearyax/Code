@@ -1,0 +1,28 @@
+<%- include('../partials/header', { hola : 'edit' }) %>
+<h2>Edit Product</h2>
+
+<form action="/products/<%= p._id %>?_method=PUT" method="POST">
+    <label for="name">Name</label>
+    <input type="text" name="name" id="name" value="<%= p.name %>" required>
+    <label for="price">Price</label>
+    <input type="number" name="price" id="price" value="<%= p.price %>" required>
+    <label for="category">Category</label>
+    <select name="category" id="category">
+        <!-- <option value="fast" <%= p.category==="fast"?"selected":"" %> >Fast</option> -->
+        <% category.forEach(element => { %>
+            <option value="<%= element %>" <%= p.category===element?"selected":"" %>><%= element %></option>
+        <% }) %>
+    </select>
+    <button type="submit">Done</button>
+</form>
+
+<form action="/products/<%= p._id %>?_method=DELETE" method="POST">
+    <button type="submit">Delete</button>
+</form>
+
+
+<hr>
+<a href="/products">Home</a>
+
+</body>
+</html>
