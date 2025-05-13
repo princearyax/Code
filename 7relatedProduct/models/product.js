@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Farm = require('./farm');
 
+
 const productSchema = new mongoose.Schema({
     name:{
         type: String,
