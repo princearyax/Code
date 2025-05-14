@@ -46,6 +46,22 @@ app.post('/farms', async (req, res) => {
   await newFarm.save();
   res.redirect('/farms');
 });
+app.get("/farms/:id/products/new", async (req, res) => {
+  const { id } = req.params;
+  const farm = await Farm.findById(id);
+  res.render('farms/newProduct', { category:categories, farm });
+});
+app.post('/farms/:id/products', async (req, res) => {
+  const { id } = req.params;
+  const farm = await Farm.findById(id);
+  const product = new Product(req.body);
+  farm.products.push(product);
+  product.farm = farm;
+  await product.save();
+  await farm.save();
+  res.redirect(`/farms/${id}`);
+  // res.send(req.body);
+});
 
 
 
@@ -81,7 +97,7 @@ app.post('/products', async (req, res) => {
 
 app.get('/products/:id', async(req, res) => {
   const {id} = req.params;
-  const product = await Product.findById(id); //findOne{_id: id});
+  const product = await Product.findById(id).populate("farm","name"); //findOne{_id: id});
   res.render('products/show', { product });
 })
 

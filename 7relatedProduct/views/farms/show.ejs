@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farm</title>
+</head>
+<body>
+    <h2><%= farm.name %></h2>
+    <p>City: <%= farm.city %></p>
+    <p>State: <%= farm.state %></p>
+    <p>Products:</p>
+    <ul>
+        <% farm.products.forEach(product => { %>
+            <li>
+                <a href="/products/<%= product._id %>"><%= product.name %></a>
+            </li>
+        <% }) %>
+    </ul>
+    <a href="/farms/<%= farm._id %>/products/new">Add product to farm</a>
+    <a href="/farms">All farms</a>
+</body>
+</html>

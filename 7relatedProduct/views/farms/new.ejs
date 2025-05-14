@@ -1,0 +1,25 @@
+<%- include('../partials/header', { hola : 'new' }) %>
+    <h2>Create Farm</h2>
+
+
+    <form action="/farms" method="POST">
+        <div>
+            <label for="name">Name</label>
+            <input type="text" name="name" id="name" required>
+        </div>
+        <div>
+            <label for="city">City</label>
+            <input type="text" name="city" id="city" required>
+        </div>
+        <div>
+            <label for="state">State</label>
+            <input type="text" name="state" id="state" required>
+        </div>
+        <button type="submit">Create</button>
+    </form>
+
+    <hr>
+    <a href="/products">Home</a>
+    </body>
+
+    </html>

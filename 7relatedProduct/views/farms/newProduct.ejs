@@ -1,0 +1,25 @@
+<%- include('../partials/header', { hola : 'new' }) %>
+<h2>Create PRoduct for farm <%= farm.name %></h2>
+
+
+<form action="/farms/<%= farm._id %>/products" method="POST">
+    <label for="name">Name</label>
+    <input type="text" name="name" id="name" required>
+    <label for="price">Price</label>
+    <input type="number" name="price" id="price" required>
+    <label for="category">Category</label>
+    <select name="category" id="category">
+        <!-- <option value="fruit">Fruit</option>
+        <option value="dairy">Dairy</option>
+        <option value="fast">Fast</option> -->
+        <% category.forEach(element => { %>
+            <option value="<%= element %>"><%= element %></option>
+        <% }) %>
+    </select>
+    <button type="submit">Create</button>
+</form>
+
+<hr>
+<a href="/farms/<%= farm._id %>">Back to farm</a>
+</body>
+</html>
