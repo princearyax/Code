@@ -121,8 +121,9 @@ app.delete("/campgrounds/:id", async (req, res) => {
     res.redirect("/campgrounds");
 });
 
-//review routes
-const Review = require("./models/review");
+//review routes 
+const Review = require("./models/review");  //mmm.. sud be at top , but just for reference
+const { getDefaultSettings } = require("http2");
 app.post("/campgrounds/:id/reviews", validateReview, async (req, res) => {
     const {id} = req.params;
     const campground = await Campground.findById(id);
@@ -132,10 +133,16 @@ app.post("/campgrounds/:id/reviews", validateReview, async (req, res) => {
     await campground.save();
     res.redirect(`/campgrounds/${id}`);
 });
+app.delete("/campgrounds/:id/reviews/:reviewId", catchAsync(async(req, res)=>{
+    const {id, reviewId} = req.params;
+    await Campground.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
+    await Review.findByIdAndDelete(reviewId);
+    res.redirect(`/campgrounds/${id}`);
+}));
 
 app.all(/.*/, (req, res, next) => {
     // res.status(404).send("Page not found");
-    next(new ExpressError("Page not found", 404));
+    next(new ExpressError("Page not found this hits", 404));
 });
 
 app.use((err, req, res, next) => {
