@@ -24,7 +24,15 @@ app.get("/c", (req, res)=>{
     res.send(`you havve view this page    ${req.session.count} times`);
 });
 
+app.get("/register", (req, res)=>{
+    const { username = "noname" } = req.query;
+    req.session.username=username;
+    res.redirect("/greet");
+});
 
+app.get("/greet", (req, res)=>{
+    res.send(`Hello, ${req.session.username}`);
+});
 
 app.listen(3000, ()=>{
     console.log("Server running at 3000");
