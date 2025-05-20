@@ -1,2 +1,4 @@
 morgan for 2middleware
 ejs-mate for 3design
+joi for validation mongo middleware thing
+cookie-parser,express-session obvious
