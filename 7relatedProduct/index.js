@@ -7,6 +7,23 @@ const methodOverride = require('method-override');
 const Product = require('./models/product');
 const Farm = require('./models/farm');
 
+// for session flash
+const session = require("express-session");
+const flash = require("connect-flash");
+app.use(session({
+    secret:"thisIsUsedToSign",
+    //just two option to be explicit about
+    resave: false,
+    saveUninitialized: true,
+}));
+app.use(flash()); 
+// now req obj has a method called flash
+app.use((req, res, next)=>{
+  res.locals.meow = req.flash("key_category");
+  //now access to every single templates
+  next();
+});
+
 mongoose.connect('mongodb://localhost:27017/activity', {
 //   useNewUrlParser: true,
 //   useUnifiedTopology: true,
@@ -30,7 +47,7 @@ app.use(methodOverride('_method'));
 
 app.get('/farms', async (req, res) => {
   const farms = await Farm.find({});
-  res.render('farms/index', { farms });
+  res.render('farms/index', { farms, message: req.flash("key_category") });
 });
 app.get('/farms/new', (req, res) => {
   res.render('farms/new');
@@ -44,6 +61,7 @@ app.post('/farms', async (req, res) => {
   // res.send(req.body);
   const newFarm = new Farm(req.body);
   await newFarm.save();
+  req.flash("key_category", "this gonna be displayed");
   res.redirect('/farms');
 });
 app.get("/farms/:id/products/new", async (req, res) => {
