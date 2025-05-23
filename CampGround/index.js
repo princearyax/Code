@@ -4,6 +4,8 @@ const mongoose = require("mongoose"); //wrapAsync fun
 const ExpressError = require("./utilities/expressError");
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate"); //in info.txt
+const session = require("express-session");
+const flash = require("connect-flash");
 
 const campgroundsRoute = require("./routes/campgrounds");
 const reviewRoute = require("./routes/reviews");
@@ -34,6 +36,28 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 //serving static files
 app.use(express.static(path.join(__dirname,"public")));
+//for session
+const sessionConfig  = {
+    secret : "thisShouldBeBetterInProduction",
+    resave: false,
+    saveUninitialized: true,
+    //can specify store:mongo or somtn
+    cookie : {
+        httpOnly: true,
+        expires: Date.now()+1000*60*60,//in ms
+        maxAge: 1000*60*60
+    }
+};
+app.use(session(sessionConfig));
+//will be able to flash something with req.flash by passing in a key and a value
+app.use(flash());
+app.use((req, res, next)=>{
+    res.locals.saved=req.flash("saved");
+    res.locals.success=req.flash("success");
+    res.locals.error=req.flash("error");
+    //now we'll have access to this our template
+    next();
+})
 
 
 //review

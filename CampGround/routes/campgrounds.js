@@ -24,8 +24,14 @@ router.get("/new", (req, res) => {
 
 router.get("/:id", catchAsync(async (req, res) => {
     const campground = await Campground.findById(req.params.id).populate("reviews");
+    if(!campground){
+        req.flash("error","Can't find the campground");
+        return res.redirect("/campgrounds");
+    }
     console.log(campground);
     res.render("campgrounds/show.ejs", { campground });
+    //for just one flash function but we're using middleware
+    // res.render("campgrounds/show.ejs", { campground, flashMsg :req.flash("saved") });
 }));
 // router.get("/:id", async (req, res) => {
 //     const campground = await Campground.findById(req.params.id);
@@ -56,6 +62,8 @@ router.post("/", validateCampground, async (req, res, next) => {
         // }
         const campground = new Campground(req.body.campground);
         await campground.save();
+        //adding flash function
+        req.flash("saved","The camp is saved");
         res.redirect(`/campgrounds/${campground._id}`);
     }
     catch (e) {
@@ -65,18 +73,24 @@ router.post("/", validateCampground, async (req, res, next) => {
 
 router.get("/:id/edit", async (req, res) => {
     const campground = await Campground.findById(req.params.id);
+    if(!campground){
+        req.flash("error","Can't find the campground");
+        return res.redirect("/campgrounds");
+    }
     res.render("campgrounds/edit.ejs", { campground });
 });
 
 router.put("/:id", validateCampground, async (req, res) => {
     const { id } = req.params;
     const campground = await Campground.findByIdAndUpdate(id, { ...req.body.campground }, { new: true });
+    req.flash("success","Successfully updated")
     res.redirect(`/campgrounds/${campground._id}`);
 });
 
 router.delete("/:id", async (req, res) => {
     const { id } = req.params;
     await Campground.findByIdAndDelete(id);
+    req.flash("success","Successfully deleted camp");
     res.redirect("/campgrounds");
 });
 
