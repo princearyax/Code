@@ -4,6 +4,7 @@ const app = express();
 const User = require("./models/user")
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
+const session = require("express-session");
 
 mongoose.connect("mongodb://localhost:27017/temp")
     .then(() => {
@@ -16,6 +17,25 @@ mongoose.connect("mongodb://localhost:27017/temp")
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.urlencoded({extended:true}));
+const sessionConfig  = {
+    secret : "thisShouldBeBetterSecret",
+    resave: false,
+    saveUninitialized: true,
+    //can specify store:mongo or somtn
+    cookie : {
+        httpOnly: true,
+        // expires: Date.now()+1000*60*60,//in ms
+        // maxAge: 1000*60*60
+    }
+};
+app.use(session(sessionConfig));
+
+const requireLogin = (req, res, next)=>{
+    if(!req.session.user_id){
+        return res.redirect("/login");
+    }
+    next()
+}
 
 
 app.get("/", (req, res)=>{
@@ -31,6 +51,7 @@ app.post("/register", async (req, res)=>{
         username,
         password:hash
     }).save();
+    req.session.user_id = user._id;
     //one is lo , lo
     res.redirect("/");
 });
@@ -46,12 +67,26 @@ app.post("/login", async (req, res)=>{
     }else{
         const validPass = await bcrypt.compare(password, user.password);
         if(validPass){
+            req.session.user_id = user._id;
             res.send("corrrect");
-
         }else{
             res.send("some error");
         }
     }
+});
+
+app.post("/logout", (req, res) => {
+    req.session.user_id = null;
+    // req.session.destroy(); //for destroying the session entirely
+    res.redirect("/login");
+});
+
+app.get("/secret", requireLogin, (req, res)=>{
+    console.log(req.session.user_id);
+    // if(!req.session.user_id){
+    //     return res.redirect("/login");
+    // }else
+    res.render("secret"); 
 });
 
 app.listen(3000, ()=>{
