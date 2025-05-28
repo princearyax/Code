@@ -6,9 +6,13 @@ const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate"); //in info.txt
 const session = require("express-session");
 const flash = require("connect-flash");
+const passport = require("passport");
+const authStrategy = require("passport-local");
+const User = require("./models/user");
 
-const campgroundsRoute = require("./routes/campgrounds");
-const reviewRoute = require("./routes/reviews");
+const campgroundRoutes = require("./routes/campgrounds");
+const reviewRoutes = require("./routes/reviews");
+const userRoutes = require("./routes/users");
 
 mongoose.connect("mongodb://localhost:27017/yelp-camp")
     .then(() => {
@@ -57,9 +61,20 @@ app.use((req, res, next)=>{
     res.locals.error=req.flash("error");
     //now we'll have access to this our template
     next();
+});
+app.use(passport.initialize()); //must be used after app.use(session(...))
+app.use(passport.session());
+passport.use(new authStrategy(User.authenticate()));
+
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser()); 
+
+
+app.get("/fakeUser", async (req, res) => {
+    const user = new User({ email:"ok@gmail.com", username:"arya" });
+    const newUser = await User.register(user, "lo");
+    res.send(newUser);
 })
-
-
 //review
 
 
@@ -67,9 +82,9 @@ app.get("/", (req, res) => {
     res.render("home.ejs", { title: "Home" });
 });
 
-app.use("/campgrounds", campgroundsRoute);
-app.use("/campgrounds/:id/reviews", reviewRoute);
-
+app.use("/", userRoutes);
+app.use("/campgrounds", campgroundRoutes);
+app.use("/campgrounds/:id/reviews", reviewRoutes);
 
 app.all(/.*/, (req, res, next) => {
     // res.status(404).send("Page not found");
