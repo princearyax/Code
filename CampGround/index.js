@@ -55,19 +55,23 @@ const sessionConfig  = {
 app.use(session(sessionConfig));
 //will be able to flash something with req.flash by passing in a key and a value
 app.use(flash());
-app.use((req, res, next)=>{
-    res.locals.saved=req.flash("saved");
-    res.locals.success=req.flash("success");
-    res.locals.error=req.flash("error");
-    //now we'll have access to this our template
-    next();
-});
+
 app.use(passport.initialize()); //must be used after app.use(session(...))
 app.use(passport.session());
 passport.use(new authStrategy(User.authenticate()));
 
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser()); 
+
+
+app.use((req, res, next)=>{
+    res.locals.currentUser = req.user;
+    res.locals.saved=req.flash("saved");
+    res.locals.success=req.flash("success");
+    res.locals.error=req.flash("error");
+    //now we'll have access to this our template
+    next();
+});
 
 
 app.get("/fakeUser", async (req, res) => {
