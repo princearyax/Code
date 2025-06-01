@@ -16,9 +16,13 @@
                         <%= campground.location %>
                     </li>
                     <li class="list-group-item">
+                        Author: <%= campground.author.username %>
+                    </li>
+                    <li class="list-group-item">
                         <%= campground.price %>
                     </li>
                 </ul>
+                <% if(currentUser && campground.author.equals(currentUser._id)){ %>
                 <div class="card-body">
                     <a class="card-link btn btn-secondary" href="/campgrounds/<%= campground._id %>/edit">Edit</a>
                     <form class="d-inline card-link " action="/campgrounds/<%= campground._id %>?_method=DELETE"
@@ -26,6 +30,7 @@
                         <button class="btn btn-danger">Delete</button>
                     </form>
                 </div>
+                <% } %>
             </div>
         </div>
         <div class="col-6">

@@ -66,6 +66,7 @@ passport.deserializeUser(User.deserializeUser());
 
 app.use((req, res, next)=>{
     console.log("session in middleware", req.session);
+    res.locals.tempp = "popo"; //try for debug etc
     res.locals.currentUser = req.user;
     res.locals.saved=req.flash("saved");
     res.locals.success=req.flash("success");
