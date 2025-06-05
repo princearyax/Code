@@ -4,15 +4,8 @@ const Campground = require("../models/campground");
 const catchAsync = require("../utilities/catchAsync");  //wrapAsync fun
 const ExpressError = require("../utilities/expressError");
 const { campgroundSchema } = require("../schemas.js");
-const { isLoggedIn } = require("../middleware.js");
+const { isLoggedIn, validateCampground, isAuthor } = require("../middleware.js");
 
-const validateCampground = (req, res, next) => {
-    const {error} = campgroundSchema.validate(req.body);
-    if (error) {
-        const msg = error.details.map(e => e.message).join(", ");
-        throw new ExpressError(msg, 400);
-    }else next();
-}
 
 router.get("/", async (req, res) => {
     const campgrounds = await Campground.find({});
@@ -74,40 +67,25 @@ router.post("/", isLoggedIn, validateCampground, async (req, res, next) => {
     }
 });
 
-router.get("/:id/edit", isLoggedIn, async (req, res) => {
+router.get("/:id/edit", isLoggedIn, isAuthor, async (req, res) => {
     const { id } = req.params;
     const campground = await Campground.findById(id);
     if(!campground){
         req.flash("error","Can't find the campground");
         return res.redirect("/campgrounds");
     }
-    if(!campground.author.equals(req.user._id)){
-        req.flash("error", "You can't do that, Access Denied");
-        return res.redirect(`/campgrounds/${campground._id}`)
-    }
     res.render("campgrounds/edit.ejs", { campground });
 });
 
-router.put("/:id", isLoggedIn, validateCampground, async (req, res) => {
+router.put("/:id", isLoggedIn, isAuthor, validateCampground, async (req, res) => {
     const { id } = req.params;
-    const campground = await Campground.findById(id)
-    if(!campground.author.equals(req.user._id)){
-        req.flash("error", "You can't do that, Access Denied");
-        return res.redirect(`/campgrounds/${campground._id}`)
-    }
-    //well/...
-    const camp = await Campground.findByIdAndUpdate(id, { ...req.body.campground }, { new: true });
+    const campground = await Campground.findByIdAndUpdate(id, { ...req.body.campground }, { new: true });
     req.flash("success","Successfully updated")
     res.redirect(`/campgrounds/${campground._id}`);
 });
 
-router.delete("/:id", isLoggedIn, async (req, res) => {
+router.delete("/:id", isLoggedIn, isAuthor, async (req, res) => {
     const { id } = req.params;
-    const campground = await Campground.findById(id)
-    if(!campground.author.equals(req.user._id)){
-        req.flash("error", "You can't do that, Access Denied");
-        return res.redirect(`/campgrounds/${campground._id}`)
-    }
     await Campground.findByIdAndDelete(id);
     req.flash("success","Successfully deleted camp");
     res.redirect("/campgrounds");
