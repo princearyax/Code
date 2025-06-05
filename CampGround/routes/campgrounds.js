@@ -2,8 +2,6 @@ const express = require("express");
 const router = express.Router();
 const Campground = require("../models/campground");
 const catchAsync = require("../utilities/catchAsync");  //wrapAsync fun
-const ExpressError = require("../utilities/expressError");
-const { campgroundSchema } = require("../schemas.js");
 const { isLoggedIn, validateCampground, isAuthor } = require("../middleware.js");
 
 
@@ -18,12 +16,11 @@ router.get("/new", isLoggedIn, (req, res) => {
 
 router.get("/:id", catchAsync(async (req, res) => {
     const campground = await Campground.findById(req.params.id).populate("reviews").populate("author");
-    console.log(campground);
+    console.log("campground when camp/id hit in routess"+campground);
     if(!campground){
         req.flash("error","Can't find the campground");
         return res.redirect("/campgrounds");
     }
-    console.log(campground);
     res.render("campgrounds/show.ejs", { campground });
     //for just one flash function but we're using middleware
     // res.render("campgrounds/show.ejs", { campground, flashMsg :req.flash("saved") });

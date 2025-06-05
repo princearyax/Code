@@ -65,13 +65,13 @@ passport.deserializeUser(User.deserializeUser());
 
 
 app.use((req, res, next)=>{
-    console.log("session in middleware", req.session);
     res.locals.tempp = "popo"; //try for debug etc
     res.locals.currentUser = req.user;
     res.locals.saved=req.flash("saved");
     res.locals.success=req.flash("success");
     res.locals.error=req.flash("error");
     //now we'll have access to this our template
+    console.log("session in middleware in index before any routes", req.session);
     next();
 });
 
