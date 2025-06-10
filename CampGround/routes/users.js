@@ -37,6 +37,7 @@ router.post('/login',
     (req, res) => {
         req.flash('success', 'Welcome back!');
         const redirectUrl = res.locals.returnTo || '/campgrounds'; // update this line to use res.locals.returnTo now
+        if(res.locals.returnToMethod!="Get") return res.redirect("/campgrounds");
         res.redirect(redirectUrl);
     });
 //By using the storeReturnTo middleware function, we can save the returnTo value to res.locals before passport.authenticate() clears the session and deletes req.session.returnTo. This enables us to access and use the returnTo value (via res.locals.returnTo) later in the middleware chain so that we can redirect users to the appropriate page after they have logged in.
