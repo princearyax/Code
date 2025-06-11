@@ -5,13 +5,13 @@ const passport = require("passport");
 const { storeReturnTo } = require('../middleware');
 const users = require("../controllers/users");
 
-router.get("/register", users.renderRegisterForm);
+router.route("/register")
+    .get(users.renderRegisterForm)
+    .post(catchAsync(users.registerUser));
 
-router.post("/register", catchAsync(users.registerUser));
-
-router.get("/login", users.renderLoginForm);
-
-router.post('/login',
+router.route("/login")
+    .get(users.renderLoginForm)
+    .post(
     // use the storeReturnTo middleware to save the returnTo value from session to res.locals
     storeReturnTo,
     // passport.authenticate logs the user in and clears req.session
