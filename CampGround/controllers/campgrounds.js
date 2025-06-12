@@ -38,9 +38,6 @@ module.exports.showCampground = async (req, res) => {
 
 module.exports.createCampground = async (req, res, next) => {
     try {
-        // if(!req.body.campground) {
-        //     throw new ExpressError("Invalid Campground Data", 400);
-        // }
         // const campgroundSchema = joi.object({ //not a mongoose schema
         //     campground: joi.object({
         //         title: joi.string().required(),
@@ -50,15 +47,8 @@ module.exports.createCampground = async (req, res, next) => {
         //         location: joi.string().required()
         //     }).required()
         // });
-        // const {error} = campgroundSchema.validate(req.body);
-        // console.log(error);
-        // if (error) { 
-        //     const msg = error.details.map(e => e.message).join(", ");
-        //     console.log("meow error");
-        //     // console.log(msg);
-        //     throw new ExpressError(msg, 400);
-        // }
-        const campground = new Campground(req.body.campground);
+        campground = new Campground(req.body.campground);
+        campground.images = req.files.map(f => ({url: f.path, filename : f.filename}));
         campground.author = req.user._id;
         await campground.save();
         //adding flash function
