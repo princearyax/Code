@@ -6,7 +6,8 @@ module.exports.campgroundSchema = joi.object({ //not a mongoose schema
         // image: joi.string().required(),
         description: joi.string().required(),
         location: joi.string().required()
-    }).required()
+    }).required(),
+    deleteImages: joi.array()
 });
 
 module.exports.reviewSchema = joi.object({

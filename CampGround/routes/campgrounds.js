@@ -12,6 +12,7 @@ const upload = multer( { storage } );
 
 router.route("/")
     .get(catchAsync(campgrounds.index))
+    //upload an array(multiple iamges) under the key in the form data image
     .post(isLoggedIn, upload.array("image"), validateCampground, catchAsync(campgrounds.createCampground));
     // .post(upload.array("image"), (req, res) => {
     //     res.send("work");
@@ -23,7 +24,7 @@ router.get("/new", isLoggedIn, campgrounds.renderNewForm);
 
 router.route("/:id")
     .get(catchAsync(campgrounds.showCampground))
-    .put(isLoggedIn, isAuthor, validateCampground, catchAsync(campgrounds.updateCampground))
+    .put(isLoggedIn, isAuthor, upload.array("image"), validateCampground, catchAsync(campgrounds.updateCampground))
     .delete(isLoggedIn, isAuthor, catchAsync(campgrounds.deleteCampground));
 // router.get("/:id", async (req, res) => {
 //     const campground = await Campground.findById(req.params.id);

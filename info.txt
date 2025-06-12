@@ -9,3 +9,4 @@ passport for authentication into node easily
 multer for parsing multiform data, upload files
 dotenv for .env files etc
 cloudinary multer for image, file upload
+maptiler for map features

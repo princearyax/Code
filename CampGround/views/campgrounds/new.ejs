@@ -10,7 +10,7 @@
                         Looks good!
                     </div>
                 </div>
-                <div class="mb-1">
+                <div class="mb-3">
                     <label class="form-label" for="location">Location : </label>
                     <input class="form-control" type="text" name="campground[location]" id="location" required>
                     <div class="valid-feedback">
@@ -24,9 +24,11 @@
                     <label class="form-label" for="image">Image Url : </label>
                     <input class="form-control" type="text" name="campground[image]" id="image" required>
                 </div> -->
-                <div class="mb-3">
-                    <label class="form-label" for="image">Image : </label>
-                    <input class="form-control" type="file" name="image" id="image" required multiple>
+                <!-- <label class="form-label" for="image">Image : </label>
+                    <input class="form-control" type="file" name="image" id="image" required multiple> -->
+                <div class="input-group mb-3">
+                    <input type="file" class="form-control" id="inputGroupFile02" name="image" multiple>
+                    <label class="input-group-text" for="inputGroupFile02">Upload</label>
                 </div>
 
                 <div class="mb-3">
@@ -51,5 +53,3 @@
             <a href="/campgrounds">Index</a>
         </div>
     </div>
-
-   
