@@ -8,8 +8,8 @@ const { places, descriptors } = require('./seedHelpers');
 const Campground = require('../models/campground');
 //mmmmmmm
 
-const maptilerClient = require("@maptiler/client");
-maptilerClient.config.apiKey = process.env.MAPTILER_API_KEY; // replace this with actual kley 
+// const maptilerClient = require("@maptiler/client");
+// maptilerClient.config.apiKey = process.env.MAPTILER_API_KEY; // replace this with actual kley 
 
 console.log("lllllllllllllllllllll",process.env.MAPTILER_API_KEY)
 
@@ -30,7 +30,7 @@ const seedDB = async () => {
     for (let i = 0; i < 10; i++) {
         const random50 = Math.floor(Math.random() * 50);
 
-        const geoData = await maptilerClient.geocoding.forward(`${cities[random50].city}, ${cities[random50].state}`, { limit: 1 });//
+        // const geoData = await maptilerClient.geocoding.forward(`${cities[random50].city}, ${cities[random50].state}`, { limit: 1 });
 
         const camp = new Campground({
             location: `${cities[random50].city}, ${cities[random50].state}`,
@@ -39,12 +39,16 @@ const seedDB = async () => {
             price: Math.floor(Math.random() * 20) + 100,
             author: "68373651143d1dbb9a1ac629",
 
-            geometry: geoData.features[0].geometry,
+            // geometry: geoData.features[0].geometry,
+            geometry: {
+                type: "Point",
+                coordinates: [cities[random50].longitude, cities[random50].latitude]
+            },
 
             images: [
                 {
-                    url: 'https://res.cloudinary.com/dnmguhtpt/image/upload/v1749654264/Yelp-camp/lcnhjbjbvviaj3whlbvo.png',
-                    filename: 'Yelp-camp/lcnhjbjbvviaj3whlbvo'
+                    url: 'https://res.cloudinary.com/dnmguhtpt/image/upload/v1749654264/Yelp-camp/mofysrwxiuku9fy7cfrv.png',
+                    filename: 'Yelp-camp/mofysrwxiuku9fy7cfrv'
                 },
                 {
                     url: 'https://res.cloudinary.com/dnmguhtpt/image/upload/v1749654264/Yelp-camp/zzmnldqhh03awy1s7elo.png',

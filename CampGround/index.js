@@ -91,7 +91,7 @@ app.get("/fakeUser", async (req, res) => {
 
 
 app.get("/", (req, res) => {
-    res.render("home.ejs", { title: "Home" });
+    res.render("home.ejs", { title: "Arya Camp" });
 });
 
 app.use("/", userRoutes);
