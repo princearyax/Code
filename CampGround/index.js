@@ -16,6 +16,9 @@ const passport = require("passport");
 const authStrategy = require("passport-local");
 const User = require("./models/user");
 
+const sanitizeV5 = require('./utilities/mongoSanitizeV5.js');//security
+// const mongoSanitize = require('express-mongo-sanitize');
+
 const campgroundRoutes = require("./routes/campgrounds");
 const reviewRoutes = require("./routes/reviews");
 const userRoutes = require("./routes/users");
@@ -35,6 +38,7 @@ db.once("open", () => {
 });
 
 const app = express();
+app.set('query parser', 'extended'); //security
 const port = 3000;
 
 app.engine("ejs", ejsMate);
@@ -48,12 +52,14 @@ app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname,"public")));
 //for session
 const sessionConfig  = {
+    name: "secere",
     secret : "thisShouldBeBetterInProduction",
     resave: false,
     saveUninitialized: true,
     //can specify store:mongo or somtn
     cookie : {
         httpOnly: true,
+        // secure: true,
         expires: Date.now()+1000*60*60,//in ms
         maxAge: 1000*60*60
     }
@@ -69,7 +75,7 @@ passport.use(new authStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser()); 
 
-
+app.use(sanitizeV5({ replaceWith: '_' }));//security
 app.use((req, res, next)=>{
     res.locals.tempp = "popo"; //try for debug etc
     res.locals.currentUser = req.user;
@@ -77,9 +83,11 @@ app.use((req, res, next)=>{
     res.locals.success=req.flash("success");
     res.locals.error=req.flash("error");
     //now we'll have access to this our template
-    console.log("session in middleware in index before any routes", req.session);
+    // console.log("session in middleware in index before any routes", req.session);
+    console.log("query:   ",req.query);
     next();
 });
+
 
 
 app.get("/fakeUser", async (req, res) => {

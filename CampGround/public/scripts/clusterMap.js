@@ -4,7 +4,7 @@ maptilersdk.config.apiKey = maptilerApiKey;
 console.log("lllllllllllllllllllllllllllllllll", campgrounds);
 
 const map = new maptilersdk.Map({
-    container: 'map',
+    container: 'cluster-map',
     style: maptilersdk.MapStyle.BRIGHT,
     center: [ 77.32721451669931, 23.570633479090272 ],
     zoom: 3
