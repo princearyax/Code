@@ -13,9 +13,9 @@
                 <div class="col-md-4">
                     <!-- <img src="https://picsum.photos/id/<%= Math.floor(Math.random()*200) %>/450/300" class="img-fluid" alt=""> -->
                     <% if(campground.images.length) {%>
-                        <img src="<%= campground.images[0].url %>" class="img-fluid" alt="">
+                        <img crossorigin="anonymous" src="<%= campground.images[0].url %>" class="img-fluid" alt="">
                     <% }else { %>
-                        <img class="img-fluid" src="somedefaultimg" alt="">
+                        <img crossorigin="anonymous" class="img-fluid" src="somedefaultimg" alt="">
                     <% } %>
                 </div>
                 <div class="col-md-8">
